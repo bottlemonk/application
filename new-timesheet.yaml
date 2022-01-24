@@ -1,0 +1,152 @@
+id: new-timesheet
+type: PageHeaderMenu
+areas:
+  header:
+    blocks:
+      - _ref: components/user_avatar.yaml
+properties:
+  title: New timesheet # The title in the browser tab.
+layout:
+  contentJustify: center
+requests:
+  - id: save_data
+    type:  MongoDBInsertOne
+    connectionId: timesheet
+    properties:
+      doc:
+        timestamp:
+          _date: now
+        date:
+          _state: date_selector
+        rate:
+          _state: rate_selector
+        site:
+          _state: site_input
+        mileage:
+          _state: mileage_input
+        hours:
+          _state: hours_selector
+        company:
+          _state: company_selector
+        insertedby:
+          name: 
+            _user: name
+          id:
+            _user: email
+
+blocks:
+  - id: content_card
+    type: Card
+    layout:
+      size: 800
+      contentGutter: 16 # Make a 16px gap between all blocks in this card.
+    blocks:
+      - id: page_heading
+        type: Title
+        properties:
+          content: New timesheet # Change the title on the page.
+          level: 3 # Make the title a little smaller (an html `<h3>`).
+      
+      # Date selector
+      - id: date_selector
+        type: DateSelector
+        required: true
+        properties:
+          disabledDates:
+            dates: []
+            ranges: []
+          label:
+            title: Please select the date you worked
+          format: DD-MM-YYYY
+
+   # Company selector, multiple choice
+      - id: company_selector
+        type: Selector
+        required: true
+        properties:
+          label:
+            title: 'Please select the company:'
+          options:
+            - GMCAZ
+            - Martins
+            - Tarmac Day
+            - Tarmac Night
+      
+      # Rate Selector
+      - id: rate_selector
+        type: Selector
+        required: true
+        properties:
+          title: Please select your rate
+          options:
+            - 105
+            - 125
+            - 140
+            - 150
+            - 160
+            - 180
+            - 190
+            - 200
+
+      # Site selector
+      - id: site_input
+        type: TextInput
+        required: true
+        properties:
+          title: Please enter the site name
+
+      # Mileage input, numeric input
+      - id: mileage_input
+        type: NumberInput
+        required: true
+        properties:
+          label:
+            title: Please enter your mileage
+
+      # Hours Selector
+      - id: hours_selector
+        type: Selector
+        required: true
+        properties:
+          title: Please select your hours
+          options:
+            - 10
+            - 13
+            - 14
+            - 15
+      
+      - id: cancel_button
+        type: Button
+        layout:
+          span: 12
+        properties:
+          block: true
+          title: Cancel
+          type: default
+        events:
+          onClick:
+            - id: reset
+              type: Reset
+            - id: goto_main
+              type: Link
+              params:
+                back: true
+
+      # Submit button that when clicked inputs data onto DB | then resets the form ready for re-input
+      - id: submit_button
+        type: Button
+        layout:
+          span: 12
+        properties:
+          block: true
+          type: primary
+          title: Submit
+        events:
+          onClick:
+            - id: validate_submit
+              type: Validate
+            - id: save_data
+              type: Request
+              params: save_data
+            - id: reset
+              type: Reset

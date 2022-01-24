@@ -1,0 +1,23 @@
+id: loginout
+type: Box
+blocks:
+  - id: Login
+    type: Button
+    visible:
+      _eq:
+        - _user: sub
+        - null
+    events:
+      onClick:
+        - id: login
+          type: Login
+  - id: Logout
+    type: Button
+    visible:
+      _ne:
+        - _user: sub
+        - null
+    events:
+      onClick:
+        - id: logout
+          type: Logout

@@ -1,0 +1,45 @@
+lowdefy: 3.23.2
+name: Application
+
+connections:
+  - id: timesheet
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: timesheet
+      write: true
+
+config:
+  homePageId: home
+  auth:
+    openId:
+      # The url the user should be redirected to after logout.
+      logoutRedirectUri: '/logged-out'
+    pages:
+      public: true
+      protected: 
+        - new
+        - new-timesheet
+menus:
+  - id: default
+    links:
+      - id: home
+        type: MenuLink
+        properties:
+          icon: HomeOutlined
+          title: Home
+        pageId: home
+      - id: new-timesheet
+        type: MenuLink
+        properties:
+          icon: FormOutlined
+          title: New timesheet
+        pageId: new-timesheet
+pages:
+  - _ref: home.yaml
+  - _ref: new.yaml
+  - _ref: profile.yaml
+  - _ref: login.yaml
+  - _ref: logged-out.yaml
+  - _ref: new-timesheet.yaml
