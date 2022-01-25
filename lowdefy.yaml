@@ -1,6 +1,7 @@
 lowdefy: 3.23.2
-name: Application
+name: TMPS Timesheets
 
+# Connections for the application
 connections:
   - id: timesheet
     type: MongoDBCollection
@@ -10,6 +11,7 @@ connections:
       collection: timesheet
       write: true
 
+# Configuration options for the application
 config:
   homePageId: home
   auth:
@@ -21,6 +23,8 @@ config:
       protected: 
         - new
         - new-timesheet
+
+# The main menu for the application
 menus:
   - id: default
     links:
@@ -36,6 +40,8 @@ menus:
           icon: FormOutlined
           title: New timesheet
         pageId: new-timesheet
+
+# References to the other pages/yaml files
 pages:
   - _ref: home.yaml
   - _ref: new.yaml
