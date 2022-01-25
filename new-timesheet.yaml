@@ -8,6 +8,7 @@ properties:
   title: New timesheet # The title in the browser tab.
 layout:
   contentJustify: center
+
 requests:
   - id: save_data
     type:  MongoDBInsertOne
@@ -29,9 +30,6 @@ requests:
         company:
           _state: company_selector
         insertedby:
-          name: 
-            _user: name
-          id:
             _user: email
 
 blocks:
