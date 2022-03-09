@@ -62,6 +62,7 @@ blocks:
         type: Selector
         required: true
         properties:
+          onfocus: blur()
           label:
             title: 'Please select the company:'
           options:
@@ -77,7 +78,7 @@ blocks:
         properties:
           title: Please select your rate
           options:
-            - 105
+            - 108
             - 125
             - 140
             - 150
@@ -109,6 +110,7 @@ blocks:
           title: Please select your hours
           options:
             - 10
+            - 12
             - 13
             - 14
             - 15
