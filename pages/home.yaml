@@ -32,6 +32,11 @@ areas:
                       size: large
                       title: Let's build something great together
                       color: '#1890ff'
+          - id: block_id
+            type: Title
+            properties:
+              content:
+                _user: user_id 
                     
       
   footer:

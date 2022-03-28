@@ -1,7 +1,7 @@
-id: new
+id: admin
 type: PageHeaderMenu
 properties:
-  title: New something
+  title: Admin Section
 layout:
   contentJustify: center
 areas:
@@ -16,7 +16,7 @@ areas:
           - id: page_heading
             type: Title
             properties:
-              content: New timesheet # Change the title on the page.
+              content: Admin Page # Change the title on the page.
               level: 3 # Make the title a little smaller (an html `<h3>`).
   footer:
     blocks:
