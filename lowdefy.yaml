@@ -1,6 +1,12 @@
 lowdefy: 3.23.2
 name: TMPS Timesheets
 
+
+# Use the AgGridAlpine custom block
+types:
+  AgGridAlpine:
+    url: https://blocks-cdn.lowdefy.com/v3.12.3/blocks-aggrid/meta/AgGridAlpine.json
+
 # Connections for the application
 connections:
   - id: timesheet
@@ -10,20 +16,38 @@ connections:
         _secret: MONGODB_URI
       collection: timesheet
       write: true
+  - id: users
+    type: MongoDBCollection
+    properties:
+      collection: users
+      databaseUri:
+        _secret: MONGODB_URI
+      write: true
 
 # Configuration options for the application
 config:
-  homePageId: home
+  homePageId: login
   auth:
     openId:
-      # The url the user should be redirected to after logout.
-      logoutRedirectUri: '/logged-out'
+      #logoutRedirectUri: '/logged-out'
+      logoutRedirectUri: '{{ openid_domain }}/v2/logout?returnTo={{ host }}/logged-out&client_id={{ client_id }}'
+      rolesField: https://elated-aryabhata-c09133.netlify.app/roles
     pages:
-      public: true
-      protected: 
-        - new
-        - new-timesheet
+      protected: true
+      public: 
+       - login
+       - logged-out
+       - '404'
+       - home
+      roles: 
+        admin:
+          - admin
+          #- users
+          #- new-user
+          #- edit-user
+      
 
+    
 # The main menu for the application
 menus:
   - id: default
@@ -40,12 +64,30 @@ menus:
           icon: FormOutlined
           title: New timesheet
         pageId: new-timesheet
+      - id: users
+        type: MenuLink
+        properties:
+          icon: FormOutlined
+          title: Users
+        pageId: users
+      - id: admin
+        type: MenuLink
+        properties:
+          icon: FormOutlined
+          title: Admin
+        pageId: admin
 
 # References to the other pages/yaml files
 pages:
-  - _ref: home.yaml
-  - _ref: new.yaml
-  - _ref: profile.yaml
-  - _ref: login.yaml
-  - _ref: logged-out.yaml
-  - _ref: new-timesheet.yaml
+  - _ref: pages/404.yaml
+  - _ref: pages/edit-profile.yaml
+  - _ref: pages/edit-user.yaml
+  - _ref: pages/new-user.yaml
+  - _ref: pages/home.yaml
+  - _ref: pages/admin.yaml
+  - _ref: pages/edit-profile.yaml
+  - _ref: pages/login.yaml
+  - _ref: pages/logged-out.yaml
+  - _ref: pages/new-timesheet.yaml
+  - _ref: pages/profile.yaml
+  - _ref: pages/users.yaml
