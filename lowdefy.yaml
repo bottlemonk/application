@@ -26,12 +26,12 @@ connections:
 
 # Configuration options for the application
 config:
-  homePageId: login
+  homePageId: home
   auth:
     openId:
       #logoutRedirectUri: '/logged-out'
       logoutRedirectUri: '{{ openid_domain }}/v2/logout?returnTo={{ host }}/logged-out&client_id={{ client_id }}'
-      rolesField: https://elated-aryabhata-c09133.netlify.app/roles
+      rolesField: https://example.com/roles
     pages:
       protected: true
       public: 
@@ -42,11 +42,9 @@ config:
       roles: 
         admin:
           - admin
-          #- users
-          #- new-user
-          #- edit-user
-      
-
+          - users
+          - new-user
+          - edit-user
     
 # The main menu for the application
 menus:
