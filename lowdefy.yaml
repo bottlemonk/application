@@ -23,10 +23,17 @@ connections:
       databaseUri:
         _secret: MONGODB_URI
       write: true
+  - id: timesheets
+    type: MongoDBCollection
+    properties:
+      databaseUri:
+        _secret: MONGODB_URI
+      collection: timesheet
+      write: true
 
 # Configuration options for the application
 config:
-  homePageId: home
+  homePageId: login
   auth:
     openId:
       #logoutRedirectUri: '/logged-out'
@@ -38,6 +45,7 @@ config:
        - login
        - logged-out
        - '404'
+       - '500'
        - home
       roles: 
         admin:
@@ -89,3 +97,4 @@ pages:
   - _ref: pages/new-timesheet.yaml
   - _ref: pages/profile.yaml
   - _ref: pages/users.yaml
+  - _ref: pages/500.yaml

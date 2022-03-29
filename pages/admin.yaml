@@ -1,28 +1,127 @@
 id: admin
 type: PageHeaderMenu
 properties:
-  title: Admin Section
+  title: Timesheet Administration   # This is the title as it appears in the browser
+
+requests:
+  - id: get_timesheets
+    type:  MongoDBAggregation
+    connectionId: timesheets
+    properties:
+      pipeline:
+        - $sort:
+            date: 1
+  
+  - id: get_timesheets_gtl
+    type: MongoDBFind
+    connectionId: timesheets
+    properties:
+      query:
+        date: 
+          $gt:
+            _state: From
+          $lt:
+            _state: To
+      options: 
+        sort:
+          date: 1
+        projection:
+          _id: 0
+          insertedby: 1
+          date: 1
+          site: 1
+          rate: 1
+
 layout:
   contentJustify: center
+
 areas:
-  content:
+  content:    
     blocks:
-      - id: content_card
-        type: Card
-        layout:
-          size: 800 # Set the size of the card so it does not fill the full screen.
-          contentGutter: 16 # Make a 16px gap between all blocks in this card.
-        blocks:
-          - id: page_heading
-            type: Title
+    # Top card
+      - id: date_range_bar
+        type: Box
+        style:
+          padding: 10
+          background: '#FFFFFF'
+          border-radius: 10
+          margin: 10
+        layout: 
+          span: 16
+        blocks: 
+          
+          # Date from selector block
+          - id: From
+            type: DateSelector
+            style:  
+              margin: 5
+              padding: 5
+            layout: 
+              span: 6
+            properties: 
+              format: DD-MM-YYYY
+          
+          # DateTo selector block
+          - id: To
+            type: DateSelector
+            style:
+              margin: 5
+              padding: 5
+            layout: 
+              span: 6
             properties:
-              content: Admin Page # Change the title on the page.
-              level: 3 # Make the title a little smaller (an html `<h3>`).
-  footer:
-    blocks:
-        - id: footer
-          type: Paragraph
+              format: DD-MM-YYYY
+          
+          # Search button
+          - id: search_btn
+            type: Button
+            style: 
+              margin: 5
+              padding: 5
+            layout:
+              span: 6
+              align: bottom
+            properties:
+              title: Search
+            events:
+              onClick:
+                - id: submit_btn
+                  type: Request
+                  params: get_timesheets_gtl
+                - id: set_state
+                  type: SetState
+                  params:
+                    timesheets:
+                      _request: get_timesheets_gtl
+          
+          - id: create_csv
+            type: Button
+            style:  
+              padding: 5
+              margin: 5
+            properties:
+              size: large
+              title: Generate a CSV
+              color: '#1890ff'
+            events:
+              onClick:
+                #Generate a CSV file when this button is clicked
+                - id: generate_csv
+                  type: JsAction
+                  params:
+                    name: csvMake
+                    args:
+                      - profiles.csv          # csv filename
+                      - _state: timesheets    # 
+ 
+      - id: timesheets
+        type: List
+        layout:
+          contentGutter: 16
+          span: 16
+        blocks:
+        - id: block_id
+          type: Box
           properties:
-            type: secondary
-            content: |
-              Made by a Lowdefy 🤖
+            content:
+              _state: timesheets.$.insertedby
