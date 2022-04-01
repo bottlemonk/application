@@ -3,12 +3,35 @@ type: PageHeaderMenu
 properties:
   title: Timesheet Administration   # This is the title as it appears in the browser
 
+events:
+  onEnterAsync:
+    # Fetch all users
+    # This is done in onEnterAsync instead of onInitAsync to update the users table
+    # after linking back from the new or edit pages.
+    - id: get_timesheets
+      type: Request
+      params: get_timesheets
+
 requests:
   - id: get_timesheets
     type:  MongoDBAggregation
     connectionId: timesheets
     properties:
       pipeline:
+        - $project:
+            _id: 1
+            email: 1
+            lastname: 1
+            firstname: 1
+            site: 1
+            rate: 1
+            company: 1
+            hours: 1
+            milegae: 1
+            date:
+              $dateToString:
+                date: $date
+                format: '%d/%m/%Y' 
         - $sort:
             date: 1
   
@@ -31,97 +54,78 @@ requests:
           date: 1
           site: 1
           rate: 1
+  - id: delete_selected_timesheet
+    type:  MongoDBDeleteOne
+    connectionId: timesheets
+    properties:
+      filter:
+        _id:
+          _state: _id
+
+
 
 layout:
   contentJustify: center
-
-areas:
-  content:    
+   
+blocks:
+  - id: max_width_box
+    type: Box
+    layout:
+      size: 1200
     blocks:
-    # Top card
-      - id: date_range_bar
-        type: Box
-        style:
-          padding: 10
-          background: '#FFFFFF'
-          border-radius: 10
-          margin: 10
-        layout: 
-          span: 16
-        blocks: 
-          
-          # Date from selector block
-          - id: From
-            type: DateSelector
-            style:  
-              margin: 5
-              padding: 5
-            layout: 
-              span: 6
-            properties: 
-              format: DD-MM-YYYY
-          
-          # DateTo selector block
-          - id: To
-            type: DateSelector
-            style:
-              margin: 5
-              padding: 5
-            layout: 
-              span: 6
-            properties:
-              format: DD-MM-YYYY
-          
-          # Search button
-          - id: search_btn
-            type: Button
-            style: 
-              margin: 5
-              padding: 5
-            layout:
-              span: 6
-              align: bottom
-            properties:
-              title: Search
-            events:
-              onClick:
-                - id: submit_btn
-                  type: Request
-                  params: get_timesheets_gtl
-                - id: set_state
-                  type: SetState
-                  params:
-                    timesheets:
-                      _request: get_timesheets_gtl
-          
-          - id: create_csv
-            type: Button
-            style:  
-              padding: 5
-              margin: 5
-            properties:
-              size: large
-              title: Generate a CSV
-              color: '#1890ff'
-            events:
-              onClick:
-                #Generate a CSV file when this button is clicked
-                - id: generate_csv
-                  type: JsAction
-                  params:
-                    name: csvMake
-                    args:
-                      - profiles.csv          # csv filename
-                      - _state: timesheets    # 
- 
-      - id: timesheets
-        type: List
+      - id: title
+        type: Title
         layout:
-          contentGutter: 16
-          span: 16
+          flex: 1 1 auto
+        properties:
+          content: Timesheets
+          level: 2
+      - id: content_card
+        type: Card
         blocks:
-        - id: block_id
-          type: Box
-          properties:
-            content:
-              _state: timesheets.$.insertedby
+          # Use a AgGridAlpine custom block for the users table.
+          - id: timesheets_table
+            type: AgGridAlpine
+            properties:
+              rowData:
+                _request: get_timesheets
+              defaultColDef:
+                sortable: true
+                resizable: true
+                filter: true
+              columnDefs:
+                - headerName: Date
+                  field: date
+                  width: 150
+                - headerName: Email
+                  field: email
+                  width: 200
+                - headerName: First name
+                  field: firstname
+                  width: 150
+                - headerName: Last name
+                  field: lastname
+                  width: 150
+                - headerName: Site
+                  field: site
+                  width: 150
+                - headerName: Company
+                  field: company
+                  width: 150
+                - headerName: Hours
+                  field: hours
+                  width: 100
+                - headerName: Delete
+                  type: Button
+                  
+            events:
+              onRowClick:
+                # Link to "edit-user" page if a row is clicked
+                # Set the user _id to the input object
+                - id: link_to_edit
+                  type: Link
+                  params:
+                    pageId: edit-timesheet
+                    input:
+                      timesheet_id:
+                        _event: row._id

@@ -53,6 +53,7 @@ config:
           - users
           - new-user
           - edit-user
+          - edit-timesheet
     
 # The main menu for the application
 menus:
@@ -98,3 +99,4 @@ pages:
   - _ref: pages/profile.yaml
   - _ref: pages/users.yaml
   - _ref: pages/500.yaml
+  - _ref: pages/edit-timesheet.yaml

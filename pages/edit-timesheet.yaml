@@ -1,0 +1,167 @@
+# This page is protected, so can only be accessed by logged in users.
+# Only users with the "admin" role can access this page.
+id: edit-timesheet
+type: PageHeaderMenu
+properties:
+  title: Edit Timesheet
+layout:
+  contentJustify: center
+
+events:
+  onEnter:
+    # Fetch the user data from MongoDB
+    - id: get_timesheet
+      type: Request
+      params: get_timesheet
+    
+    # Set the user data to state to populate the input block values.
+    - id: set_timesheet
+      type: SetState
+      params:
+        _request: get_timesheet
+
+requests:
+  # Request to fetch the user.
+  - id: get_timesheet
+    type: MongoDBFindOne
+    connectionId: timesheets
+    properties:
+      query:
+        _id:
+          _input: timesheet_id
+      options:
+        # Only fetch the necessary data
+        projection:
+          email: 1
+          firstname: 1
+          lastname: 1
+          company: 1
+          hours: 1
+          rate: 1
+  
+  - id: update_timesheet
+    type: MongoDBUpdateOne
+    connectionId: timesheets
+    properties:
+      filter:
+        _id:
+          _state: _id
+      update:
+        $set:
+          firstname:
+            _state: firstname
+          lastname:
+            _state: lastname
+          company:
+            _state: company
+          site:
+            _state: site
+          hours:
+            _state: hours
+          rate:
+            _state: rate
+  
+  - id: delete_selected_timesheet
+    type:  MongoDBDeleteOne
+    connectionId: timesheets
+    properties:
+      filter:
+        _id:
+          _state: _id
+areas:
+  header:
+    blocks:
+      - _ref: components/user_avatar.yaml
+blocks:
+  - id: title
+    type: Title
+    style:
+      textAlign: center
+    properties:
+      content: Edit Timesheet
+      level: 2
+  
+  - id: content_card
+    type: Card
+    layout:
+      size: 600
+      contentGutter: 16
+      contentJustify: center
+    blocks:
+      - id: delete
+        type: Button
+        layout: 
+          span: 12
+        properties:
+          title: Delete
+          icon: CloseCircleOutlined
+          block: true
+        events:
+          onClick:
+            # Call the "update_user" request and return to the "users" page.
+            - id: delete_selected_timesheet
+              type: Request
+              params: delete_selected_timesheet
+            - id: return_to_admin
+              type: Link
+              params: admin
+     
+      - id: email
+        type: TextInput
+        properties:
+          title: Email
+      - id: firstname
+        type: TextInput
+        properties:
+          title: First Name
+      - id: lastname
+        type: TextInput
+        properties:
+          title: Last Name
+      - id: company
+        type: TextInput
+        properties:
+          title: Company
+      - id: rate
+        type: TextInput
+        properties:
+          title: Rate
+      - id: hours
+        type: TextInput
+        properties:
+          title: Hours
+     
+      - id: cancel_button
+        type: Button
+        layout:
+          span: 12
+        properties:
+          title: Cancel
+          icon: CloseCircleOutlined
+          type: default
+          block: true
+        events:
+          onClick:
+            # Return to the users page.
+            - id: return_to_admin
+              type: Link
+              params: admin
+
+      - id: save_button
+        type: Button
+        layout:
+          span: 12
+        properties:
+          title: Save
+          icon: SaveOutlined
+          block: true
+        events:
+          onClick:
+            # Call the "update_user" request and return to the "users" page.
+            - id: update_timesheet
+              type: Request
+              params: update_timesheet
+            - id: return_to_admin
+              type: Link
+              params: admin
+      
