@@ -38,6 +38,7 @@ requests:
           company: 1
           hours: 1
           rate: 1
+          notes: 1
   
   - id: update_timesheet
     type: MongoDBUpdateOne
@@ -60,6 +61,8 @@ requests:
             _state: hours
           rate:
             _state: rate
+          notes:
+            _state: notes
   
   - id: delete_selected_timesheet
     type:  MongoDBDeleteOne
@@ -130,6 +133,10 @@ blocks:
         type: TextInput
         properties:
           title: Hours
+      - id: notes
+        type: TextInput
+        properties:
+          title: Notes
      
       - id: cancel_button
         type: Button
