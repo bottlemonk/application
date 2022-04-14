@@ -52,14 +52,4 @@ blocks:
           html:
             # Show the user name using the "name" claim on the user object/OpenID Connect ID token.
             _user: name
-        # Show the user avatar using the "picture" claim on the user object/OpenID Connect ID token.
-      - id: user_avatar
-        type: Avatar
-        layout:
-          flex: 0 1 auto
-        properties:
-          size: large
-          src:
-            _user: picture
-          alt:
-            _user: name
+        

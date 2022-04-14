@@ -20,18 +20,11 @@ areas:
             properties:
               title: Welcome to TM Payment Solutions Ltd
               subTitle: We are excited to be working with you
-              icon:
-                name: HeartTwoTone
-                color: '#f00'
+              icon: BankFilled
             areas:
               extra:
                 blocks:
-                  - id: docs_button
-                    type: Button
-                    properties:
-                      size: large
-                      title: Let's build something great together
-                      color: '#1890ff'
+                  
           - id: block_id
             type: Title
             properties:
@@ -46,4 +39,4 @@ areas:
         properties:
           type: secondary
           content: |
-            Made by a Lowdefy 🤖
+            Made by MNET

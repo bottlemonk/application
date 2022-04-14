@@ -67,47 +67,6 @@ blocks:
       contentGutter: 16
       contentJustify: center
     blocks:
-      - id: avatar_box
-        type: Box
-        layout:
-          size: 120
-          contentGutter: 24
-        blocks:
-          - id: avatar
-            type: Avatar
-            layout:
-              size: auto
-            properties:
-              size: 120
-              src:
-                _state: picture
-              alt:
-                _user: name
-          - id: new_avatar
-            type: Button
-            properties:
-              icon: SyncOutlined
-              shape: round
-              size: small
-              type: default
-              title: New Avatar
-        events:
-          onClick:
-            # This app uses avatars.dicebear.com user avatars, so profile pictures don't need to
-            # be uploaded and stored.
-            # When the new avatar button is clicked, a new random avatar url is generated and set to state
-            # This is then saved when the profile is saved.
-            - id: new_avatar_scr
-              type: SetState
-              params:
-                picture:
-                  _nunjucks:
-                    template: https://avatars.dicebear.com/api/bottts/{{ random }}.svg
-                    on:
-                      random:
-                        _random:
-                          type: string
-                          length: 12
       # Form blocks to allow the user to edit their name
       - id: given_name
         type: TextInput

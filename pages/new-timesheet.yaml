@@ -70,6 +70,7 @@ blocks:
           label:
             title: 'Please select the company:'
           options:
+            - Colas
             - GMCAZ
             - Martins
             - Tarmac Day
@@ -84,6 +85,7 @@ blocks:
           options:
             - 108
             - 125
+            - 128
             - 140
             - 150
             - 160
@@ -118,6 +120,12 @@ blocks:
             - 13
             - 14
             - 15
+      - id: notes
+        type: TextInput
+        properties:
+          allowClear: true
+          label:
+            title: Additional Notes
       
       - id: cancel_button
         type: Button

@@ -29,16 +29,6 @@ blocks:
       contentJustify: center
     blocks:
       # Display all the user details.
-      - id: avatar
-        type: Avatar
-        layout:
-          size: auto
-        properties:
-          size: 120
-          src:
-            _user: picture
-          alt:
-            _user: name
       - id: details
         type: Descriptions
         properties:
