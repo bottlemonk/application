@@ -29,6 +29,8 @@ requests:
           _state: hours_selector
         company:
           _state: company_selector
+        notes:
+          _state: notes
         email:
             _user: email
         firstname:
