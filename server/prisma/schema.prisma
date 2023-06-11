@@ -1,0 +1,36 @@
+datasource postgres {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  createdAt DateTime @default(now())
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+model Invoice {
+  createdAt DateTime          @default(now())
+  food      Boolean?
+  id        String            @id @default(cuid())
+  mileage   Int?
+  site      EnumInvoiceSite[]
+  stopout   Boolean?
+  updatedAt DateTime          @updatedAt
+  van       Boolean?
+}
+
+enum EnumInvoiceSite {
+  Site_1
+  Site_2
+  Site_3
+}
